@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <f:view>
+
+
+            <h:form>
+                <h1><h:outputText value="Create/Edit"/></h1>
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Id:" for="id" />
+                    <p:inputText id="id" value="#{produktManagedBean.produkt.id}" title="Id" required="true" requiredMessage="The Id field is required."/>
+                    <p:outputLabel value="Nazwa:" for="nazwa" />
+                    <p:inputText id="nazwa" value="#{produktManagedBean.produkt.nazwa}" title="Nazwa" required="true" requiredMessage="The Nazwa field is required."/>
+                    <p:outputLabel value="Ilosc:" for="ilosc" />
+                    <p:inputText id="ilosc" value="#{produktManagedBean.produkt.ilosc}" title="Ilosc" required="true" requiredMessage="The Ilosc field is required."/>
+                    <p:outputLabel value="Cena:" for="cena" />
+                    <p:inputText id="cena" value="#{produktManagedBean.produkt.cena}" title="Cena" />
+                    <p:outputLabel value="IdJednostka:" for="idJednostka" />
+                    <p:selectOneMenu id="idJednostka" value="#{produktManagedBean.produkt.idJednostka}" >
+                        <f:converter converterId="jednostkaConverter"/>
+                        <f:selectItems value="#{jednostkaManagedBean.jednostka}" var="j"
+                                       itemLabel="#{j.jednostka}" itemValue="#{j}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="IdKategoria:" for="idKategoria" />
+                    <p:selectOneMenu id="idKategoria" value="#{produktManagedBean.produkt.idKategoria}" >
+                        <f:converter converterId="kategoriaConverter"/>
+                        <f:selectItems value="#{kategoriaManagedBean.kategoria}" var="k"
+                                       itemLabel="#{k.kategoria}" itemValue="#{ck}"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+            </h:form>
+        </f:view>
+
+    </h:body>
+</html>
+
