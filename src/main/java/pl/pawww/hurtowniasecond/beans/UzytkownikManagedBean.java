@@ -15,6 +15,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
 import org.primefaces.context.RequestContext;
@@ -51,7 +52,13 @@ public class UzytkownikManagedBean implements Serializable {
         EntityManager em = DBManager.getManager().createEntityManager();
         TypedQuery<Uzytkownik> query = em.createNamedQuery("Uzytkownik.findByLogin", Uzytkownik.class);
         query.setParameter("login", uzytkownik.getLogin());
-        Uzytkownik findu = (Uzytkownik) query.getSingleResult();
+        Uzytkownik findu = null;;
+        try{
+            findu = (Uzytkownik) query.getSingleResult();
+        }
+        catch(NoResultException e){
+            
+        }
         em.close();
         String haslo = null;
         if (findu != null) {
@@ -72,11 +79,16 @@ public class UzytkownikManagedBean implements Serializable {
                 System.out.println(uzytkownik.getNazwaSpolki());
                 context.addCallbackParam("loggedIn", loggedIn);
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", uzytkownik);
-                this.dodajKomunikat("Udało się zalogować");
+                this.dodajKomunikat("Zalogowałeś się");
                 return "restricted/mojekonto.xhtml";
             }
         }
-        this.dodajKomunikat("Nie udało się zalogować");
+        if (findu == null) {
+            this.dodajKomunikat("Taki login nie istnieje");
+        }
+        if (findu != null) {
+            this.dodajKomunikat("Złe hasło");
+        }
         return null;
     }
 
@@ -110,5 +122,5 @@ public class UzytkownikManagedBean implements Serializable {
 
     public void dodajKomunikat(String kom) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, kom, ""));
-    }    
+    }
 }
