@@ -5,7 +5,10 @@
  */
 package pl.pawww.hurtowniasecond.beans;
 
+import java.io.Serializable;
 import java.util.List;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import pl.pawww.hurtowniasecond.entity.Produkt;
@@ -15,7 +18,9 @@ import pl.pawww.hurtowniasecond.util.DBManager;
  *
  * @author R
  */
-public class ProduktManagedBean {
+@ManagedBean(name = "produktManagedBean")
+@SessionScoped
+public class ProduktManagedBean implements Serializable {
 
     Produkt produkt = new Produkt();
 

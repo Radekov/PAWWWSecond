@@ -8,6 +8,7 @@ package pl.pawww.hurtowniasecond.beans;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import org.primefaces.context.RequestContext;
 import pl.pawww.hurtowniasecond.checknip.checkNIP;
 import pl.pawww.hurtowniasecond.entity.Uzytkownik;
+import pl.pawww.hurtowniasecond.entity.Zamowienie;
 import pl.pawww.hurtowniasecond.hash.HashPassword;
 import pl.pawww.hurtowniasecond.util.DBManager;
 
@@ -77,8 +79,9 @@ public class UzytkownikManagedBean implements Serializable {
                 uzytkownik = findu;
                 System.out.println(uzytkownik.getLogin());
                 System.out.println(uzytkownik.getNazwaSpolki());
+                System.out.println(uzytkownik.getIdOstatnie()+"  yedg");
                 context.addCallbackParam("loggedIn", loggedIn);
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", uzytkownik);
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("uzytkownik", uzytkownik);
                 this.dodajKomunikat("Zalogowałeś się");
                 return "restricted/mojekonto.xhtml";
             }
@@ -104,7 +107,11 @@ public class UzytkownikManagedBean implements Serializable {
         }
         if (checkNIP.validNIP(uzytkownik.getNip())) {
             EntityManager em = DBManager.getManager().createEntityManager();
+            Zamowienie zamowienie = new Zamowienie();
+            zamowienie.setDataZamowienia(new Date());
             em.getTransaction().begin();
+            em.persist(zamowienie);
+            uzytkownik.setIdOstatnie(zamowienie.getId());
             em.persist(uzytkownik);
             em.getTransaction().commit();
             this.dodajKomunikat("Pomyślnie zarejestrowano");
@@ -113,7 +120,7 @@ public class UzytkownikManagedBean implements Serializable {
             FacesContext fc = FacesContext.getCurrentInstance();
             HttpSession httpSession = (HttpSession) fc.getExternalContext().getSession(true);
             httpSession.setAttribute("logg", uzytkownik);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", uzytkownik);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("uzytkownik", uzytkownik);
             return "restricted/mojekonto.xhtml";
         }
         this.dodajKomunikat("Nie zarejestrowano");
@@ -122,5 +129,13 @@ public class UzytkownikManagedBean implements Serializable {
 
     public void dodajKomunikat(String kom) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, kom, ""));
+    }
+    public Zamowienie getKoszyk(){
+        if(uzytkownik.getIdOstatnie() == null)
+            return null;
+        EntityManager em = DBManager.getManager().createEntityManager();
+        Zamowienie koszyk = em.find(Zamowienie.class, uzytkownik.getIdOstatnie());
+        em.close();
+        return koszyk;
     }
 }
