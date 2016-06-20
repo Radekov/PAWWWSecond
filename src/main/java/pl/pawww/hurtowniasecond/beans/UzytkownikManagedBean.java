@@ -7,8 +7,10 @@ package pl.pawww.hurtowniasecond.beans;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
@@ -21,8 +23,10 @@ import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
 import org.primefaces.context.RequestContext;
 import pl.pawww.hurtowniasecond.checknip.checkNIP;
+import pl.pawww.hurtowniasecond.entity.Produkt;
 import pl.pawww.hurtowniasecond.entity.Uzytkownik;
 import pl.pawww.hurtowniasecond.entity.Zamowienie;
+import pl.pawww.hurtowniasecond.entity.ZamowienieProdukt;
 import pl.pawww.hurtowniasecond.hash.HashPassword;
 import pl.pawww.hurtowniasecond.util.DBManager;
 
@@ -137,5 +141,24 @@ public class UzytkownikManagedBean implements Serializable {
         Zamowienie koszyk = em.find(Zamowienie.class, uzytkownik.getIdOstatnie());
         em.close();
         return koszyk;
+    }
+    public List<ZamowienieProdukt> getProdukty(){
+        Zamowienie koszyk = getKoszyk();
+        Integer idZamowienie = koszyk.getId();
+        EntityManager em = DBManager.getManager().createEntityManager();
+        TypedQuery<ZamowienieProdukt> query = em.createNamedQuery("ZamowienieProdukt.findByIdZamowienie", ZamowienieProdukt.class);
+        query.setParameter("idZamowienie", idZamowienie);
+        List<ZamowienieProdukt> findKoszyk = null;;
+        findKoszyk = query.getResultList();
+        em.close();
+        return findKoszyk;
+    }
+    public String getSumaKoszyk(){
+        List<ZamowienieProdukt> kosz = getProdukty();
+        BigDecimal suma = BigDecimal.ZERO;
+        for(ZamowienieProdukt zp:kosz){
+            suma = suma.add(zp.getCena());
+        }
+        return suma.toString();
     }
 }
