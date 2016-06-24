@@ -148,7 +148,7 @@ public class UzytkownikManagedBean implements Serializable {
         EntityManager em = DBManager.getManager().createEntityManager();
         TypedQuery<ZamowienieProdukt> query = em.createNamedQuery("ZamowienieProdukt.findByIdZamowienie", ZamowienieProdukt.class);
         query.setParameter("idZamowienie", idZamowienie);
-        List<ZamowienieProdukt> findKoszyk = null;;
+        List<ZamowienieProdukt> findKoszyk = null;
         findKoszyk = query.getResultList();
         em.close();
         return findKoszyk;

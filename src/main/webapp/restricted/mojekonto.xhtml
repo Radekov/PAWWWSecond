@@ -6,41 +6,41 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>#{msgs.title}</title>
     </h:head>
     <h:body>
-        <h:outputLink value="faces/index.xhtml">Strona Główna</h:outputLink>
+        <h:outputLink value="faces/index.xhtml">#{msgs.goHome}</h:outputLink>
         <h:outputText value="#{uzytkownikManagedBean.uzytkownik.login}" />
         <h:outputText value="#{uzytkownikManagedBean.uzytkownik.nazwaSpolki}" />
         <h:outputText value="#{uzytkownikManagedBean.uzytkownik.nip}" />
         <h:outputText value="#{uzytkownikManagedBean.uzytkownik.idOstatnie}" />
         <c:set var="kosz" value="#{uzytkownikManagedBean.koszyk}" />
-        <h:link value="Dodaj" outcome="hidden/hidden.xhtml" />
+        <h:link value="#{msgs.addNewProdukt}" outcome="hidden/hidden.xhtml" />
         <f:view>
             <h:form>
-                <h1><h:outputText value="Produkty"/></h1>
+                <h1><h:outputText value="#{msgs.produkty}"/></h1>
                 <p:dataTable value="#{produktManagedBean.lista}" var="item" >
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Kategoria"/>
+                            <h:outputText value="#{msgs.kategoria}"/>
                         </f:facet>
                         <h:outputText value="#{item.idKategoria.kategoria}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Nazwa"/>
+                            <h:outputText value="#{msgs.nazwa}"/>
                         </f:facet>
                         <h:outputText value="#{item.nazwa}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Cena"/>
+                            <h:outputText value="#{msgs.cena}"/>
                         </f:facet>
                         <h:outputText value="#{item.cena}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="W magazynie"/>
+                            <h:outputText value="#{msgs.naStanie}"/>
                         </f:facet>
                         <h:outputText value="#{item.ilosc}"/>
                         <h:outputText value=" #{item.idJednostka.jednostka}"/>
@@ -48,7 +48,7 @@
 
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Ile"/>
+                            <h:outputText value="#{msgs.ileZamowic}"/>
                         </f:facet>
                         <h:inputText value="#{zamowienieProduktManagedBean.zamowienieProdukt.ilosc}"  
                                      />
@@ -60,7 +60,7 @@
                         </f:facet>
                         <p:growl id="growl" life="2000" />
 
-                        <p:commandButton value="Dodaj do koszyka" id="withIcon"
+                        <p:commandButton value="#{msgs.dodajDoKoszyk}" id="withIcon"
                                          action="#{zamowienieProduktManagedBean.dodajDoKoszyka}"
                                          actionListener="#{zamowienieProduktManagedBean.produktKoszykListener}"
                                          update="growl" icon="ui-icon-disk" >
@@ -75,49 +75,68 @@
             </h:form>
         </f:view>
 
-        
-        /*To poniżej nie działa*/
         <h:form>            
             <h:outputLink value="javascript:void(0)" onclick="PF('dlgl').show();" title="kosz">
-                <h:graphicImage value="../resources/img/koszyk.png" style="width: 5%; height: 5%"/>
+                <h:graphicImage value="resources/img/koszyk.png" style="width: 5%; height: 5%"/>
             </h:outputLink>
 
             <p:growl id="growl" sticky="true" showDetail="true" life="3000" />
 
-            <p:dialog header="Koszyk #{uzytkownikManagedBean.uzytkownik.nazwaSpolki}" widgetVar="dlgl" resizable="false">
+            <p:dialog header="#{msgs.koszyk} #{uzytkownikManagedBean.uzytkownik.nazwaSpolki}" widgetVar="dlgl" resizable="false">
                 <p:dataTable value="#{uzytkownikManagedBean.produkty}" var="item" >
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Kategoria"/>
+                            <h:outputText value="#{msgs.kategoria}"/>
                         </f:facet>
                         <h:outputText value="#{item.produkt.idKategoria.kategoria}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Nazwa"/>
+                            <h:outputText value="#{msgs.nazwa}"/>
                         </f:facet>
                         <h:outputText value="#{item.produkt.nazwa}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Aktualna cena"/>
+                            <h:outputText value="#{msgs.aktualnaCena}"/>
                         </f:facet>
                         <h:outputText value="#{item.produkt.cena}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Zamówiono"/>
+                            <h:outputText value="#{msgs.ile}"/>
                         </f:facet>
                         <h:outputText value="#{item.ilosc}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Razem"/>
+                            <h:outputText value="#{msgs.razem}"/>
                         </f:facet>
                         <h:outputText value="#{item.cena}"/>
                     </p:column>
+                    <p:column>
+                        <p:commandButton value="#{msgs.usunZKoszyka}" id="withIcon"
+                                         action="#{zamowienieProduktManagedBean.usun}"
+                                         actionListener="#{zamowienieProduktManagedBean.produktKoszykListener()}"
+                                         icon="ui-icon-disk" >
+                            <f:param name="produktID"
+                                     value="#{item.zamowienieProduktPK.idProdukt}"/>
+                            <f:param name="koszykID"
+                                     value="#{item.zamowienieProduktPK.idZamowienie}"/>
+                        </p:commandButton>
+                    </p:column>
                 </p:dataTable>
                 #{uzytkownikManagedBean.sumaKoszyk}zł
+                <p:commandButton value="#{msgs.realizujZamówienie}" id="withIcon"
+                                 action="#{zamowienieManagedBean.zamow}"
+                                 actionListener="#{zamowienieManagedBean.zamowienieListener}"
+                                 update="growl" icon="ui-icon-disk" >
+                    <f:param name="uzytkownikID"
+                             value="#{uzytkownikManagedBean.uzytkownik.id}"/>
+                    <f:param name="koszykID"
+                             value="#{item.zamowienie.id}"/>
+                </p:commandButton>
+
             </p:dialog>
         </h:form>
         <script type="text/javascript">

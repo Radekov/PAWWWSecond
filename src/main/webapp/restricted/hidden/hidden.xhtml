@@ -14,8 +14,6 @@
             <h:form>
                 <h1><h:outputText value="Create/Edit"/></h1>
                 <p:panelGrid columns="2">
-                    <p:outputLabel value="Id:" for="id" />
-                    <p:inputText id="id" value="#{produktManagedBean.produkt.id}" title="Id" required="true" requiredMessage="The Id field is required."/>
                     <p:outputLabel value="Nazwa:" for="nazwa" />
                     <p:inputText id="nazwa" value="#{produktManagedBean.produkt.nazwa}" title="Nazwa" required="true" requiredMessage="The Nazwa field is required."/>
                     <p:outputLabel value="Ilosc:" for="ilosc" />
@@ -34,6 +32,11 @@
                         <f:selectItems value="#{kategoriaManagedBean.kategoria}" var="k"
                                        itemLabel="#{k.kategoria}" itemValue="#{ck}"/>
                     </p:selectOneMenu>
+                    <f:facet name="footer">
+                        <p:commandButton value="#{msgs.addProdukt}" update="growl" action="#{produktManagedBean.dodaj}" />
+                        <!--<p:commandButton value="Login" update="growl" actionListener="hash{uzytkownikManagedBean.login}"
+                                         oncomplete="handleRegisterRequest(xhr, status, args)" />-->
+                    </f:facet>  
                 </p:panelGrid>
             </h:form>
         </f:view>

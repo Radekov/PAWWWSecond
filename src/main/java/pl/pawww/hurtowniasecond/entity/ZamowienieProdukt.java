@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ZamowienieProdukt.findAll", query = "SELECT z FROM ZamowienieProdukt z"),
     @NamedQuery(name = "ZamowienieProdukt.findByIdProdukt", query = "SELECT z FROM ZamowienieProdukt z WHERE z.zamowienieProduktPK.idProdukt = :idProdukt"),
     @NamedQuery(name = "ZamowienieProdukt.findByIdZamowienie", query = "SELECT z FROM ZamowienieProdukt z WHERE z.zamowienieProduktPK.idZamowienie = :idZamowienie"),
+    @NamedQuery(name = "ZamowienieProdukt.findByBoth", query = "SELECT z FROM ZamowienieProdukt z WHERE z.zamowienieProduktPK.idProdukt = :idProdukt AND z.zamowienieProduktPK.idZamowienie = :idZamowienie"),
     @NamedQuery(name = "ZamowienieProdukt.findByCena", query = "SELECT z FROM ZamowienieProdukt z WHERE z.cena = :cena"),
     @NamedQuery(name = "ZamowienieProdukt.findByIlosc", query = "SELECT z FROM ZamowienieProdukt z WHERE z.ilosc = :ilosc")})
 public class ZamowienieProdukt implements Serializable {

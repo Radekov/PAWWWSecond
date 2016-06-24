@@ -42,4 +42,12 @@ public class ProduktManagedBean implements Serializable {
         em.close();
         return result;
     }
+    public String dodaj(){
+        EntityManager em = DBManager.getManager().createEntityManager();
+        em.getTransaction().begin();
+        em.persist(produkt);
+        em.getTransaction().commit();
+        em.close();
+        return "../mojekonto.xhtml";
+    }
 }

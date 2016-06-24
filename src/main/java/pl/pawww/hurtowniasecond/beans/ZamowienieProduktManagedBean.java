@@ -14,6 +14,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import pl.pawww.hurtowniasecond.entity.Produkt;
 import pl.pawww.hurtowniasecond.entity.Uzytkownik;
 import pl.pawww.hurtowniasecond.entity.Zamowienie;
@@ -45,10 +47,10 @@ public class ZamowienieProduktManagedBean implements Serializable {
     }
 
     public void dodajDoKoszyka() {
-        System.out.println("Tyle produktow "+zamowienieProdukt.getIlosc());
+        System.out.println("Tyle produktow " + zamowienieProdukt.getIlosc());
         BigDecimal cena = BigDecimal.ZERO;
         cena = produkt.getCena().multiply(new BigDecimal(zamowienieProdukt.getIlosc()));
-        System.out.println("Cena prodktu: "+produkt.getCena());
+        System.out.println("Cena prodktu: " + produkt.getCena());
         System.out.println(cena);
         zamowienieProdukt.setCena(cena);
         zamowienieProdukt.setZamowienieProduktPK(new ZamowienieProduktPK(produkt.getId(), koszyk.getId()));
@@ -80,4 +82,23 @@ public class ZamowienieProduktManagedBean implements Serializable {
         this.koszyk = em.find(Zamowienie.class, id);
         em.close();
     }
+
+    public void usun() {
+        EntityManager em = DBManager.getManager().createEntityManager();
+        TypedQuery<ZamowienieProdukt> query = em.createNamedQuery("ZamowienieProdukt.findByBoth", ZamowienieProdukt.class);
+        query.setParameter("idProdukt", produkt.getId());
+        query.setParameter("idZamowienie", koszyk.getId());
+        try {
+            zamowienieProdukt = (ZamowienieProdukt) query.getSingleResult();
+            em.getTransaction().begin();
+            //zamowienieProdukt = em.merge(zamowienieProdukt);
+            em.remove(zamowienieProdukt);
+            em.getTransaction().commit();
+
+        } catch (NoResultException e) {
+
+        }
+        em.close();
+    }
+
 }
